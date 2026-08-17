@@ -85,8 +85,10 @@ public final class AppState: ObservableObject {
         let bundledRepo = resources.appendingPathComponent("repo").path
         let bundledNode = resources.appendingPathComponent("node/bin/node").path
         let bundledShim = resources.appendingPathComponent("uds-shim.mjs").path
-        let devRepo = "/Users/richardhuang/ZCodeProject/deepseek-harness"
-        let devShim = "/Users/richardhuang/ZCodeProject/DSHMac/resources-node/uds-shim.mjs"
+        // 开发模式路径经环境变量注入（DSH_DEV_REPO / DSH_DEV_SHIM），避免硬编码本机路径
+        let env = ProcessInfo.processInfo.environment
+        let devRepo = env["DSH_DEV_REPO"] ?? "deepseek-harness"
+        let devShim = env["DSH_DEV_SHIM"] ?? "resources-node/uds-shim.mjs"
         let fm = FileManager.default
 
         let repoPath = fm.fileExists(atPath: bundledRepo + "/apps/cli/lib/bin.js") ? bundledRepo : devRepo
